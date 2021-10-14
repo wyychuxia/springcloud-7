@@ -1,0 +1,62 @@
+eureka:
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://@eureka.user.name@:@eureka.user.password@@localhost:9900/eureka/
+
+spring:
+  application:
+    name: wyyweb-service
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
+
+    config:
+      discovery:
+        #开启配置中心服务发现支持
+        enabled: true
+        #配置中心服务的id
+        service-id: wyyconfig-service
+        #那个文件夹，config模块resources/config下的那个文件夹
+      label: dev
+      #读取后缀名
+      profile: dev
+      #配置文件名称
+      name: config
+      #fail-fast 如果访问配置中心失败，则停止启动服务
+      fail-fast: true
+      #retry 访问配置中心失败时的重试策略
+      retry:
+        initial-interval: 2000
+        #最多重试次数
+        max-attempts: 6
+        #最大重试间隔
+        max-interval: 4000
+        #每次重试时间是之前的倍数
+        multiplier: 1.2
+
+
+
+
+feign:
+  client:
+    config:
+      #代表所有服务
+      default:
+        #feign客户端建立连接超时时间
+        connect-timeout: 50000
+        #feign客户端建立连接后读取资源超时时间
+        read-timeout: 50000
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 50000

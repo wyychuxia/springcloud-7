@@ -1,0 +1,31 @@
+server:
+  port: 9903
+
+eureka:
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: http://@eureka.user.name@:@eureka.user.password@@localhost:9900/eureka/
+
+spring:
+  application:
+    name: wyyzuul-service
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
+
+    gateway:
+      routes:
+        - id: wyyweb
+          uri: http://localhost:9902
+          predicates:
+            #- Path=/test/getTest/** 测试
+            #- Path=/test/value/**
+            Path=/test/getTest1/**
+        - id: wyyserver
+          uri: http://localhost:9901
+          predicates:
+            Path=/test/get/**
